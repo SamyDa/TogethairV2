@@ -18,7 +18,7 @@ import javax.persistence.*;
     @AttributeOverride(name = "description", column =
             @Column(name = "COUNTRY_DESCRIPTION"))})
  */
-public abstract class User {
+public  class User {
 	
 	@Id
 	@GeneratedValue
@@ -26,5 +26,9 @@ public abstract class User {
 	
 	private String userName;
 	private String password;
+	public int getId() {
+		// TODO Auto-generated method stub
+		return id;
+	}
 
 }

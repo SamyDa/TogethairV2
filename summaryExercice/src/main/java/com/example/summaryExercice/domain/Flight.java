@@ -14,11 +14,15 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+
 @Entity
+@JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class Flight {
 	@Id
 	@GeneratedValue
-	private long id;
+	private int id;
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private Location departure;
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
@@ -26,11 +30,15 @@ public class Flight {
 	private Timestamp departureDateAndTime;
 	private LocalDateTime arrivalDateAndTime;
 	private int nrOfpassenger;
+	private String airline;
+	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval = true)
+	private Pricing price;
 	
 	
 	
 	public Flight() {
 		super();
+		price  = new Pricing();
 	}
 	public Flight(Location departure, Location arrival, Timestamp departureDateAndTime, LocalDateTime arrivalDateAndTime,
 			int nrOfpassenger, List<Booking> booking) {
@@ -40,6 +48,12 @@ public class Flight {
 		this.departureDateAndTime = departureDateAndTime;
 		this.arrivalDateAndTime = arrivalDateAndTime;
 		this.nrOfpassenger = nrOfpassenger;
+		this.price  = new Pricing();
+	}
+	
+	
+	public int getId() {
+		return id;
 	}
 	public Location getDeparture() {
 		return departure;
@@ -70,6 +84,20 @@ public class Flight {
 	}
 	public void setNrOfpassenger(int nrOfpassenger) {
 		this.nrOfpassenger = nrOfpassenger;
+	}
+	
+	
+	public String getAirline() {
+		return airline;
+	}
+	public void setAirline(String airline) {
+		this.airline = airline;
+	}
+	public Pricing getPrice() {
+		return price;
+	}
+	public void setPrice(Pricing price) {
+		this.price = price;
 	}
 	@Override
 	public String toString() {

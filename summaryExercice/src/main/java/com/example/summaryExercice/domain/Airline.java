@@ -14,6 +14,11 @@ public class Airline extends User {
 	private String airlineAcronym;
 	@OneToMany
 	List<Flight> flights;
+	
+	
+	public Airline() {
+		super();
+	}
 	public Airline(String airlineName, String airlineAcronym, List<Flight> flights) {
 		super();
 		this.airlineName = airlineName;

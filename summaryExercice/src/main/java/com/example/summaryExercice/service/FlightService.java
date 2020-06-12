@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.summaryExercice.domain.Flight;
 import com.example.summaryExercice.domain.Location;
+import com.example.summaryExercice.domain.Pricing;
 import com.example.summaryExercice.repository.springdata.FlightRepository;
 
 @Service
@@ -22,21 +23,11 @@ public class FlightService {
 		this.locationService = locationService;
 	}
 	public void save(Flight flight) {
-		/*//check if location is existing : 
-		Location location = locationService.getExisting(flight.getArrival());
-		if( location != null) {
-			System.out.println("Arrival already existing");
-			flight.setArrival(location);
+		if( locationService.existing(flight.getArrival()) && locationService.existing(flight.getDeparture()) ) {
+			flight.setArrival(locationService.findByAirportCode(flight.getArrival().getAirportCode()));
+			flight.setDeparture(locationService.findByAirportCode(flight.getDeparture().getAirportCode()));
+			flightRepository.save(flight);
 		}
-		 location = locationService.getExisting(flight.getDeparture());
-		if( location != null) {
-			System.out.println("Departure already existing");
-			flight.setDeparture(location);
-		}*/
-		System.out.println("saving flight");
-		System.out.println("with flight arrival = " + flight.getArrivalDateAndTime());
-		System.out.println("with flight departure = " + flight.getDepartureDateAndTime());
-		flightRepository.save(flight);
 	}
 	public void delete(Flight flight) {
 		flightRepository.delete(flight);
@@ -47,10 +38,42 @@ public class FlightService {
 	public Optional<Flight> findById(int id) {
 		return flightRepository.findById(id);
 	}
-	public void test(Location location, Flight flight) {
-	//	locationService.getExisting(location);
-	//	System.out.println("Parameters = " + flight.getDepartureDateAndTime() + " && " + flight.getArrivalDateAndTime());
-	//	System.out.println("Test existing ==> " + flightRepository.existing(flight.getDepartureDateAndTime(), flight.getArrivalDateAndTime()));
+
+	public void saveList(List<Flight> flight) {
+		flight.forEach(n -> save(n));
+	}
+	public void setPrice(long flightId, Pricing price) {
+		System.out.println("Set prrice entering");
+		Optional<Flight> flight = flightRepository.findById((int)flightId);
+		System.out.println("Found flight is " + flight.toString());
+		if(flight.isPresent())
+		{
+			//If the price has not been set yet
+			if(flight.get().getPrice() == null)
+				flight.get().setPrice(price);
+			else {
+				//if the price has already been set, check if the change comes from the airline or the togethair employee. To check it, we evaluate the base price
+				if(price.getBasePriceBus() != 0 ) {
+					System.out.println("Entering the not null part ");
+					flight.get().getPrice().setBasePriceEco(price.getBasePriceEco());
+					flight.get().getPrice().setBasePriceFirst(price.getBasePriceFirst());
+					flight.get().getPrice().setBasePriceBus(price.getBasePriceBus());
+					System.out.println("Prices are set ");
+					System.out.println("price.getSeatTreshold() ==> "+ price.getSeatTreshold());
+					System.out.println("flight.get().getPrice().getSeatTreshold() ==> " + flight.get().getPrice().getSeatTreshold());
+					price.getSeatTreshold().forEach(n -> {flight.get().getPrice().addSeatTreshold(n);});
+					
+				}
+				else {
+					flight.get().getPrice().setCustomToghetairPrice(price.getCustomToghetairPrice());					
+				}
+			}
+			flightRepository.save(flight.get());
+		}
+		else {
+			System.out.println("Set Price - Flight not found");
+		}
+		
 	}
 	
 

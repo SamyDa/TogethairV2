@@ -2,6 +2,7 @@ package com.example.summaryExercice.domain;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,7 +19,7 @@ public class Customer extends User {
 	@OneToOne(fetch = FetchType.EAGER)
 	private BillingInformation billingInformation;
 	private String mobileNumber; 
-	@OneToMany(targetEntity=Booking.class,  fetch=FetchType.EAGER)
+	@OneToMany(targetEntity=Booking.class,  fetch=FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "booking_fk")
 	private List<Booking> bookings;
 	public Customer(String firstName, String lastName, String email, BillingInformation billingInformation,
@@ -31,6 +32,13 @@ public class Customer extends User {
 		this.mobileNumber = mobileNumber;
 		this.bookings = bookings;
 	}
+	
+	
+	public Customer() {
+		super();
+	}
+
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -66,6 +74,10 @@ public class Customer extends User {
 	}
 	public void setBookings(List<Booking> bookings) {
 		this.bookings = bookings;
+	}
+	public void addBooking(Booking booking) {
+		this.bookings.add(booking);
+		
 	} 
 	
 	

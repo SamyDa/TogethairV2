@@ -1,6 +1,7 @@
 package com.example.summaryExercice.repository.springdata;
 
 import java.util.Date;
+import java.util.Optional;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -18,5 +19,8 @@ public interface FlightRepository extends JpaRepository<Flight, Integer> {
 	
 	@Query("Select count(f.id) from Flight f where f.departureDateAndTime = :departure and f.arrivalDateAndTime = :arrival")
 	Integer existing(@Param("departure") Timestamp departureDateTime, @Param("arrival") LocalDateTime arrivalDateTime);
+
+	Optional<Flight> findById(int flightId);
+
 
 }

@@ -26,6 +26,12 @@ public class Booking {
 		this.paymentStatus = paymentStatus;
 	}
 	
+	
+	public Booking() {
+		super();
+	}
+
+
 //	public Flight getFlight() {
 //		return flight;
 //	}
@@ -49,6 +55,21 @@ public class Booking {
 	}
 	public void setPaymentStatus(boolean paymentStatus) {
 		this.paymentStatus = paymentStatus;
+	}
+
+	public Flight getFlight() {
+		return flight;
+	}
+
+	public void setFlight(Flight flight) {
+		this.flight = flight;
+	}
+
+
+	@Override
+	public String toString() {
+		return "Booking [id=" + id + ", flight=" + flight.toString()+ ", price=" + price + ", nrTickets=" + nrTickets
+				+ ", paymentStatus=" + paymentStatus + "]";
 	}
 	
 	

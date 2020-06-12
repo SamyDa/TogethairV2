@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.example.summaryExercice.domain.Airline;
 import com.example.summaryExercice.domain.User;
 import com.example.summaryExercice.repository.springdata.UserRepository;
 
@@ -19,8 +20,11 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	public void save(User user) {
+	public int save(User user) {
+		System.out.println("Saving process");
 		userRepository.save(user);
+		System.out.println("user saved ");
+		return user.getId();
 	}
 	public void delete(User user) {
 		userRepository.delete(user);
@@ -30,6 +34,10 @@ public class UserService {
 	}
 	public Optional<User> findById(int id) {
 		return userRepository.findById(id);
+	}
+
+	public List<User> findByDisc(char discriminator) {
+		return userRepository.findAllAirline();
 	}
 	
 	
